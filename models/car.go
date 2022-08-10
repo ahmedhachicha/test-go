@@ -1,8 +1,8 @@
 package models
 
 type Car struct {
-	Model        string  `json:"model" validate:"required" `
-	Registration string  `json:"registration" validate:"required"`
+	CarModel     string  `json:"model" validate:"required" `
+	Registration string  `gorm:"not null;unique"`
 	Mileage      float32 `json:"mileage" validate:"required"`
-	IsAvailable  bool    `json:"isAvailable" `
+	IsRented     bool    `json:"is_rented" `
 }
