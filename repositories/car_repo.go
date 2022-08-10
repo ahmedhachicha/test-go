@@ -16,6 +16,13 @@ func AddCar(car models.Car) (models.Car, error) {
 	err := config.DB.Create(&car).Error
 	return car, err
 }
+
+func FindByRegistration(registration string) models.Car {
+	var car models.Car
+	config.DB.Where("registration = ?", registration).First(&car)
+	return car
+}
+
 func RentCar(registration string) models.Car {
 	var car models.Car
 	x := config.DB.Where("registration = ?", registration).First(&car)

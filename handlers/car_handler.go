@@ -34,16 +34,28 @@ func AddCar(w http.ResponseWriter, r *http.Request) {
 }
 func RentCar(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	fmt.Println("***********", params["registration"])
 	registration := params["registration"]
 	w.Header().Set("Content-Type", "application-json")
-	repositories.RentCar(registration)
-	//	w.WriteHeader(http.StatusOK)
-	//	json.NewEncoder(w).Encode(carDb)
+	findCar := repositories.FindByRegistration(registration)
+	if findCar.Registration == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode("message: car does not exist")
+	} else {
+		car := repositories.RentCar(registration)
+		fmt.Println(car)
+		if car.IsRented == true {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode("message: car already rented")
+		} else {
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(car)
+		}
+	}
+
 }
 func ReturnCar(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	fmt.Println("***********", params["registration"])
+	fmt.Println("***********return", params["registration"])
 	registration := params["registration"]
 	w.Header().Set("Content-Type", "application-json")
 	repositories.RentCar(registration)
